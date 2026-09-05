@@ -61,12 +61,11 @@ def main(page: ft.Page):
             }
         )
 
-        #todo timestamp:
-        #parse_started_at = datetime.now()
+        parse_started_at = datetime.now()
 
         conversion_result = converter.convert(file_path)
 
-        # parse_ended_at = datetime.now()
+        parse_ended_at = datetime.now()
 
         #folder containing all information: {document_name}_{YYYYMMDD}_{HHMMSS}
 
@@ -149,21 +148,25 @@ def main(page: ft.Page):
             "format": conversion_result.document.origin.mimetype,
 
 
-
-            # "time_stamp_starts":parse_started_at,
-            # "time_stamp_ends":parse_ended_at,
+            # Due to JSON serialization rules, you can only use native Python types in your dict when you want to convert it to JSON-compatible text.
+            "time_stamp_starts":str(parse_started_at),
+            "time_stamp_ends":str(parse_ended_at),
             "page_count": len(conversion_result.document.pages),
             "table_count": len(conversion_result.document.tables),
             "image_count": len(conversion_result.document.pictures)
         }
 
         with open("metadata.json", "w") as f:
+
+            #json.dump places all the information in a new JSON file
+            #json.dumps returns a JSON formatted string.
             json.dump(metadata_json_dict, f)
 
 
-        #TODO: find how to include time stamps in the JSON serialization
         #TODO: How would the user enter their desired file path through flet?
         #TODO: look at the specific pipeline options I have set up for PDF here, vs. standard PDF pipeline
+        #TODO: --> Review Docling rules, and how they connect to this project (i.e. how I can make parsing better for certain inputs)
+        #TODO: check accuracy of the content.md file --> compare all content with the actual PDF
 
 
 
